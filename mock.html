@@ -1,0 +1,119 @@
+<html>
+
+<body>
+
+
+	Book id<input type="text" id="bookid" />
+	<span id="message">message</span><br><br>
+	Book name<input type="text" id="bookname" /><br><br>
+	Price<input type="text" id="price" /><br><br>
+
+	<input type="button" id="update" value="update" >
+
+
+
+</body>
+
+<script src="jquery-3.5.1.min.js"></script>
+
+
+<script>//our scrip will come here 
+
+	$(document).ready(function () {
+		console.log("Dom working");
+
+		// ---------------blur-----------------------
+
+		$("#bookid").blur(function () {
+			console.log("blur working");
+			
+
+			let input = { bookid: $("#bookid").val() };
+
+			let parameterssend =
+			{
+				data: input,
+				type: 'get',
+				url: "http://localhost:8081/book",
+				datatype: 'json',
+				success: (datafromserver) => {
+					console.log("Status obtained : " + datafromserver.status);
+					if (datafromserver.status == true) {
+						$("#bookid").val(datafromserver.bookdetail.bookid);
+						$("#bookname").val(datafromserver.bookdetail.bookname);
+						$("#price").val(datafromserver.bookdetail.price);
+					
+						$("#message").html("book id found");
+					}
+					else {
+						$("#bookname").val("");
+						$("#price").val("");
+						$("#message").html("book id not found");
+					}
+
+
+				},
+				error: (error) => {
+					console.log("error occured" + error);
+
+				}
+
+			}
+			$.ajax(parameterssend)
+
+		});
+
+
+
+
+		// ---------------Update-----------------------
+
+		$("#update").click(function () {
+			console.log("click working");
+
+
+			let input = {
+				bookid: $("#bookid").val(),
+				bookname: $("#bookname").val(),
+				price: $("#price").val()
+			};
+
+			let parameterssend =
+			{
+				data: input,
+				type: 'get',
+				url: "http://localhost:8081/bookupdate",
+				datatype: 'json',
+				success: (datafromserver) => {
+					console.log(datafromserver.status);
+					if (datafromserver.status == true) {
+
+
+						$("#message").html("book updated");
+					}
+					else {
+						$("#message").html("book not updated");
+					}
+
+
+				},
+				error: (error) => {
+					console.log("error occured" + error);
+
+				}
+
+
+
+			}
+			$.ajax(parameterssend)
+
+		});
+
+
+	});
+
+
+</script>
+
+
+</html>
